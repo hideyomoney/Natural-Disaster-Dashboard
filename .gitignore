@@ -6,7 +6,6 @@ npm-debug.log
 # === Python backend ===
 __pycache__/
 *.pyc
-*.pkl
 .env
 venv/
 
