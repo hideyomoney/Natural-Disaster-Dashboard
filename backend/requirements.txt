@@ -7,7 +7,7 @@ geopy
 pydantic
 joblib
 python-dotenv
-scikit-learn
+scikit-learn==1.6.1
 lightgbm
 numpy
 pandas
