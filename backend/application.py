@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify, after_this_request
 from tweet_analysis import runscripts
 import threading
 import time
+import os
 
 app = Flask(__name__)
 lock = threading.Lock()
@@ -21,7 +22,7 @@ def safe_runscripts():
 def run_in_loop():
     while True:
         safe_runscripts()
-        time.sleep(60 * 10) #gets automatically stopped by azure after 2 hours since initial flask call
+        time.sleep(60 * 10)  # gets stopped by Azure after 2 hours
 
 # Start background loop
 threading.Thread(target=run_in_loop, daemon=True).start()
@@ -35,3 +36,8 @@ def run():
 
     safe_runscripts()  # Lock prevents overlap
     return jsonify(message="Manual run triggered.")
+
+# 🚀 This is what Render needs:
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
