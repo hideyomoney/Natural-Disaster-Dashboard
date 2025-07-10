@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>
+    <%= title %>
+  </title>
+<!--Any sources used is displayed here--> 
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="https://cdn.maptiler.com/maptiler-sdk-js/v3.0.1/maptiler-sdk.umd.min.js"></script>
+  <link href="https://cdn.maptiler.com/maptiler-sdk-js/v3.0.1/maptiler-sdk.css" rel="stylesheet" />
+  <script src="https://cdn.maptiler.com/leaflet-maptilersdk/v4.0.2/leaflet-maptilersdk.umd.min.js"></script>
+
+
+</head>
+
+<body style="background-color:rgb(209, 212, 248);">
+
+  <h1 style="text-align: center;">Welcome to Natural Disaster Warnings With Bluesky</h1>
+
+  <div id="map" style="border: thin solid black;"></div><br>
+
+ <!--Graphs seen below--> 
+  <div id="bar" style="float:left ;width: 49%; height: 400px;text-align:center">
+  <canvas id="myChart" width="49%"  ></canvas>
+</div>
+<div id="line" style="float:right ;width: 49%; height: 400px;text-align:center">
+  <canvas id="lineChart"width="49%"></canvas>
+</div>
+<!--Start of Tweets--> 
+  <h1 style="text-align: center;">Can't find what you are looking for, just look below!</h1><br>
+  <div id="border" style="border: thin solid black ; background-color:rgb(145, 148, 177); cursor:pointer"
+    onclick="toggleDisplay('tornado-tweets-container')">
+    <h1 style="text-align: center;user-select: none;">Tornados</h1>
+    <div id="tornado-tweets-container" style="display: none; cursor:auto"
+      onclick="toggleDisplay('tornado-tweets-container')">
+<!--Print all pulled tornados, this is the most recent ones--> 
+      <% if (tweets.length> 0) { %>
+        <% tweets.forEach(tweet=> { %>
+          <% if (tweet.disaster_type=="tornado" ){ %>
+            <div class="tweet">
+              <strong>
+                <%= tweet.disaster_type %>
+              </strong><br>
+              <strong>@<%= tweet.user %></strong>: <%= tweet.text %>
+                <br><small>
+                  <%= new Date(tweet.timestamp).toLocaleString() %>
+                </small>
+                <% if (tweet.latitude !=null){ %>
+                  <br><small>Latitude: <%= tweet.latitude %></small>
+                  <br><small>Longitude: <%= tweet.longitude %></small>
+                  <br>
+                  <%var temp=tweet.text%>
+                    <%temp=temp.replace( /[^a-zA-Z0-9\s]/g, '' )%>
+                     
+
+                      <%}%>
+            </div>
+            <%} }); %>
+              <% } else { %>
+                <p>No tweets available.</p>
+                <% } %>
+                  <script>
+
+                  </script>
+    </div>
+  </div>
+  <div id="border" style="border: thin solid black ; background-color:rgb(151, 158, 218);cursor:pointer"
+    onclick="toggleDisplay('hurricane-tweets-container')">
+    <h1 style="text-align: center; user-select: none;">Hurricanes</h1>
+    <div id="hurricane-tweets-container" style="display: none; cursor:auto"
+      onclick="toggleDisplay('hurricane-tweets-container')">
+<!--Print all pulled hurricanes, this is the most recent ones--> 
+      <% if (tweets.length> 0) { %>
+        <% tweets.forEach(tweet=> { %>
+          <% if (tweet.disaster_type=="hurricane" ){ %>
+            <div class="tweet">
+              <strong>
+                <%= tweet.disaster_type %>
+              </strong><br>
+              <strong>@<%= tweet.user %></strong>: <%= tweet.text %>
+                <br><small>
+                  <%= new Date(tweet.timestamp).toLocaleString() %>
+                </small>
+                <% if (tweet.latitude !=null){ %>
+                  <br><small>Latitude: <%= tweet.latitude %></small>
+                  <br><small>Longitude: <%= tweet.longitude %></small>
+                  <%var temp=tweet.text%>
+                    <%temp=temp.replace( /[^a-zA-Z0-9\s]/g, '' )%>
+                      
+                      <%}%>
+            </div>
+            <%}%>
+              <% }); %>
+                <% } else { %>
+                  <p>No tweets available.</p>
+                  <% } %>
+    </div>
+  </div>
+
+<!--Start of earthquakes--> 
+  <div id="border" style="border: thin solid black ; background-color:rgb(129, 119, 119);cursor:pointer"
+    onclick="toggleDisplay('earthquake-tweets-container')">
+    <h1 style="text-align: center;user-select: none; ">Earthquakes</h1>
+    <div id="earthquake-tweets-container" style="display: none; cursor:auto"
+      onclick="toggleDisplay('earthquake-tweets-container')">
+<!--Print all pulled earthquakes, this is the most recent ones--> 
+      <% if (tweets.length> 0) { %>
+        <% tweets.forEach(tweet=> { %>
+          <% if (tweet.disaster_type=="earthquake" ){ %>
+            <div class="tweet">
+              <strong>
+                <%= tweet.disaster_type %>
+              </strong><br>
+              <strong>@<%= tweet.user %></strong>: <%= tweet.text %>
+                <br><small>
+                  <%= new Date(tweet.timestamp).toLocaleString() %>
+                </small>
+                <% if (tweet.latitude !=null){ %>
+                  <br><small>Latitude: <%= tweet.latitude %></small>
+                  <br><small>Longitude: <%= tweet.longitude %></small><br>
+                  
+                  <%}%>
+            </div>
+            <%}%>
+              <% }); %>
+                <% } else { %>
+                  <p>No tweets available.</p>
+                  <% } %>
+    </div>
+  </div>
+
+
+  <div id="border" style="border: thin solid black ; background-color:rgb(120, 133, 248); cursor:pointer"
+    onclick="toggleDisplay('flood-tweets-container')">
+    <h1 style="text-align: center ;user-select: none;">Floods</h1>
+    <div id="flood-tweets-container" style="display: none; cursor:auto"
+      onclick="toggleDisplay('flood-tweets-container')">
+<!--Print all pulled flood, this is the most recent ones--> 
+      <% if (tweets.length> 0) { %>
+        <% tweets.forEach(tweet=> { %>
+          <% if (tweet.disaster_type=="flood" ){ %>
+            <div class="tweet">
+              <strong>
+                <%= tweet.disaster_type %>
+              </strong><br>
+              <strong>@<%= tweet.user %></strong>: <%= tweet.text %>
+                <br><small>
+                  <%= new Date(tweet.timestamp).toLocaleString() %>
+                </small>
+                <% if (tweet.latitude !=null){ %>
+                  <br><small>Latitude: <%= tweet.latitude %></small>
+                  <br><small>Longitude: <%= tweet.longitude %></small><br>
+                
+                  <%}%>
+            </div>
+            <%}%>
+              <% }); %>
+                <% } else { %>
+                  <p>No tweets available.</p>
+                  <% } %>
+    </div>
+  </div>
+
+  <div id="border" style="border: thin solid black ; background-color:rgb(226, 178, 87); cursor:pointer"
+    onclick="toggleDisplay('wildfire-tweets-container')">
+    <h1 style="text-align: center ; user-select: none;">Wildfires</h1>
+    <div id="wildfire-tweets-container" style="display: none; cursor:auto"
+      onclick="toggleDisplay('wildfire-tweets-container')">
+      <% if (tweets.length> 0) { %>
+        <% tweets.forEach(tweet=> { %>
+          <% if (tweet.disaster_type=="wildfire" ){ %>
+            <div class="tweet">
+              <strong>
+                <%= tweet.disaster_type %>
+              </strong><br>
+              <strong>@<%= tweet.user %></strong>: <%= tweet.text %>
+                <br><small>
+                  <%= new Date(tweet.timestamp).toLocaleString() %>
+                </small>
+                <% if (tweet.latitude !=null){ %>
+                  <br><small>Latitude: <%= tweet.latitude %></small>
+                  <br><small>Longitude: <%= tweet.longitude %></small>
+                 
+                  <%}%>
+            </div>
+            <%}%>
+              <% }); %>
+                <% } else { %>
+                  <p>No tweets available.</p>
+                  <% } %>
+    </div>
+  </div>
+
+  <div id="border" style="border: thin solid black ; background-color:rgb(156, 205, 228); cursor:pointer"
+    onclick="toggleDisplay('blizzard-tweets-container')">
+    <h1 style="text-align: center ;user-select: none;">Blizzard</h1>
+    <div id="blizzard-tweets-container" style="display: none; cursor:auto"
+      onclick="toggleDisplay('blizzard-tweets-container')">
+<!--Print all pulled blizzards, this is the most recent ones--> 
+      <% if (tweets.length> 0) { %>
+        <% tweets.forEach(tweet=> { %>
+          <% if (tweet.disaster_type=="blizzard" ){ %>
+            <div class="tweet">
+              <strong>
+                <%= tweet.disaster_type %>
+              </strong><br>
+              <strong>@<%= tweet.user %></strong>: <%= tweet.text %>
+                <br><small>
+                  <%= new Date(tweet.timestamp).toLocaleString() %>
+                </small>
+                <% if (tweet.latitude !=null){ %>
+                  <br><small>Latitude: <%= tweet.latitude %></small>
+                  <br><small>Longitude: <%= tweet.longitude %></small><br>
+                 
+                  <%}%>
+            </div>
+            <%}%>
+              <% }); %>
+                <% } else { %>
+                  <p>No tweets available.</p>
+                  <% } %>
+    </div>
+  </div>
+  <div id="border" style="border: thin solid black ; background-color:rgb(229, 230, 183); cursor:pointer"
+    onclick="toggleDisplay('haze-tweets-container')">
+    <h1 style="text-align: center ;user-select: none;">Haze</h1>
+    <div id="haze-tweets-container" style="display: none; cursor:auto" onclick="toggleDisplay('haze-tweets-container')">
+<!--Print all pulled hazes, this is the most recent ones--> 
+      <% if (tweets.length> 0) { %>
+        <% tweets.forEach(tweet=> { %>
+          <% if (tweet.disaster_type=="haze" ){ %>
+            <div class="tweet">
+              <strong>
+                <%= tweet.disaster_type %>
+              </strong><br>
+              <strong>@<%= tweet.user %></strong>: <%= tweet.text %>
+                <br><small>
+                  <%= new Date(tweet.timestamp).toLocaleString() %>
+                </small>
+                <% if (tweet.latitude !=null){ %>
+                  <br><small>Latitude: <%= tweet.latitude %></small>
+                  <br><small>Longitude: <%= tweet.longitude %></small><br>
+                  
+                  <%}%>
+            </div>
+            <%}%>
+              <% }); %>
+                <% } else { %>
+                  <p>No tweets available.</p>
+                  <% } %>
+    </div>
+  </div>
+  <div id="border" style="border: thin solid black ; background-color:rgb(162, 104, 201); cursor:pointer"
+    onclick="toggleDisplay('meteor-tweets-container')">
+    <h1 style="text-align: center ;user-select: none;">Meteor</h1>
+    <div id="meteor-tweets-container" style="display: none; cursor:auto"
+      onclick="toggleDisplay('meteor-tweets-container')">
+<!--Print all pulled meteors, this is the most recent ones--> 
+      <% if (tweets.length> 0) { %>
+        <% tweets.forEach(tweet=> { %>
+          <% if (tweet.disaster_type=="meteor" ){ %>
+            <div class="tweet">
+              <strong>
+                <%= tweet.disaster_type %>
+              </strong><br>
+              <strong>@<%= tweet.user %></strong>: <%= tweet.text %>
+                <br><small>
+                  <%= new Date(tweet.timestamp).toLocaleString() %>
+                </small>
+                <% if (tweet.latitude !=null){ %>
+                  <br><small>Latitude: <%= tweet.latitude %></small>
+                  <br><small>Longitude: <%= tweet.longitude %></small><br>
+              
+
+                  <%}%>
+            </div>
+            <%}%>
+              <% }); %>
+                <% } else { %>
+                  <p>No tweets available.</p>
+                  <% } %>
+    </div>
+  </div>
+</body>
+
+<script>
+//call api
+  const url = '<%=urlKey%>'
+  fetch(url)
+    .then(response => response.json())
+    .then(json => {
+      console.log(json);
+      //document.getElementById("demo").innerHTML = JSON.stringify(json)
+    })
+  var L;
+  const key = '<%=mKey%>';
+//create the interactive map
+  var map = L.map('map').setView([38.7946, -106.5348], 4);
+  const mtLayer = L.maptiler.maptilerLayer({
+    apiKey: key,
+    style: L.maptiler.MapStyle.STREETS, // optional
+    language: L.maptiler.Language.ENGLISH, //change the default language
+    worldCopyJump: true,
+  }).addTo(map);
+
+//add markers to map called later for each marker
+  function addToMap(lat, long, type, msg) {
+    var marker = L.marker([lat, long]).addTo(map);
+    msg = escapeTweetText(msg);
+    marker.bindPopup(`<strong>${type}</strong><br>${msg}`);
+
+  }
+//toggles the diplay of text divisions
+  function toggleDisplay(type) {
+    let container = document.getElementById(type);
+    container.style.display = container.style.display === "none" ? "block" : "none";
+  }
+ //ensures no problems with adding markers
+  function escapeTweetText(text) {
+    return text.replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\n/g, ' ');
+  }
+
+//graph data
+  const labels = ["Tornados", "Hurricanes", "Earthquakes", "Floods", "Wildfires", "Blizzards", "Haze", "Meteors"]
+  let ctx = document.getElementById('myChart');
+  const data = {
+    labels: labels,
+    datasets: [{
+      label: 'Disaster Count by type',
+      options: {
+                responsive: true,
+                maintainAspectRatio: true,
+            },
+      data: ['<%=barData[0]%>', '<%=barData[1]%>', '<%=barData[2]%>', '<%=barData[3]%>', '<%=barData[4]%>', '<%=barData[5]%>', '<%=barData[6]%>', '<%=barData[7]%>'],
+      backgroundColor: [
+        'rgba(145, 148, 177, 0.8)',
+        'rgba(151, 158, 218, 0.5)',
+        'rgba(129, 119, 119, 0.5)',
+        'rgba(120, 133, 248, 0.5)',
+        'rgba(226, 178, 87, 0.5)',
+        'rgba(156, 205, 228, 0.8)',
+        'rgba(229, 230, 183, 0.8)',
+        'rgba(162, 104, 201, 0.8)'
+      ],
+      borderColor: [
+        'rgb(145, 148, 177)',
+        'rgb(151, 158, 218)',
+        'rgb(129, 119, 119)',
+        'rgb(120, 133, 248)',
+        'rgb(226, 178, 87)',
+        'rgb(156, 205, 228)',
+        'rgb(229, 230, 183',
+        'rgb(162, 104, 201)'
+      ],
+      borderWidth: 1 
+      
+    }]
+  };
+  const config = {
+    type: 'bar',
+    data: data,
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    },
+  };
+  ctx = new Chart(ctx, config);
+
+
+  
+  let ctx2 = document.querySelector('#lineChart');
+
+
+  const lineLabels = [
+    '<%= lineLabels[0] %>',
+    '<%= lineLabels[1] %>',
+    '<%= lineLabels[2] %>',
+    '<%= lineLabels[3] %>',
+    '<%= lineLabels[4] %>',
+    '<%= lineLabels[5] %>',
+    '<%= lineLabels[6] %>',
+    '<%= lineLabels[7] %>',
+    '<%= lineLabels[8] %>',
+    '<%= lineLabels[9] %>',
+    '<%= lineLabels[10] %>',
+    '<%= lineLabels[11] %>',
+    '<%= lineLabels[12] %>',
+    '<%= lineLabels[13] %>'
+  ];
+
+  const data2 = {
+    labels: lineLabels,
+    datasets: [
+      {
+        label: 'Tornados',
+        data: [
+          '<%= disasterLineData.tornado[0] %>',
+          '<%= disasterLineData.tornado[1] %>',
+          '<%= disasterLineData.tornado[2] %>',
+          '<%= disasterLineData.tornado[3] %>',
+          '<%= disasterLineData.tornado[4] %>',
+          '<%= disasterLineData.tornado[5] %>',
+          '<%= disasterLineData.tornado[6] %>',
+          '<%= disasterLineData.tornado[7] %>',
+          '<%= disasterLineData.tornado[8] %>',
+          '<%= disasterLineData.tornado[9] %>',
+          '<%= disasterLineData.tornado[10] %>',
+          '<%= disasterLineData.tornado[11] %>',
+          '<%= disasterLineData.tornado[12] %>',
+          '<%= disasterLineData.tornado[13] %>'
+        ],
+        borderColor: 'rgb(145, 148, 177)',
+        fill: false,
+        tension: 0.1
+      },
+      {
+        label: 'Hurricanes',
+        data: [
+          '<%= disasterLineData.hurricane[0] %>',
+          '<%= disasterLineData.hurricane[1] %>',
+          '<%= disasterLineData.hurricane[2] %>',
+          '<%= disasterLineData.hurricane[3] %>',
+          '<%= disasterLineData.hurricane[4] %>',
+          '<%= disasterLineData.hurricane[5] %>',
+          '<%= disasterLineData.hurricane[6] %>',
+          '<%= disasterLineData.hurricane[7] %>',
+          '<%= disasterLineData.hurricane[8] %>',
+          '<%= disasterLineData.hurricane[9] %>',
+          '<%= disasterLineData.hurricane[10] %>',
+          '<%= disasterLineData.hurricane[11] %>',
+          '<%= disasterLineData.hurricane[12] %>',
+          '<%= disasterLineData.hurricane[13] %>'
+        ],
+        borderColor: 'rgb(151, 158, 218)',
+        fill: false,
+        tension: 0.1
+      },
+      {
+        label: 'Earthquakes',
+        data: [
+          '<%= disasterLineData.earthquake[0] %>',
+          '<%= disasterLineData.earthquake[1] %>',
+          '<%= disasterLineData.earthquake[2] %>',
+          '<%= disasterLineData.earthquake[3] %>',
+          '<%= disasterLineData.earthquake[4] %>',
+          '<%= disasterLineData.earthquake[5] %>',
+          '<%= disasterLineData.earthquake[6] %>',
+          '<%= disasterLineData.earthquake[7] %>',
+          '<%= disasterLineData.earthquake[8] %>',
+          '<%= disasterLineData.earthquake[9] %>',
+          '<%= disasterLineData.earthquake[10] %>',
+          '<%= disasterLineData.earthquake[11] %>',
+          '<%= disasterLineData.earthquake[12] %>',
+          '<%= disasterLineData.earthquake[13] %>'
+        ],
+        borderColor: 'rgb(129, 119, 119)',
+        fill: false,
+        tension: 0.1
+      },
+      {
+        label: 'Floods',
+        data: [
+          '<%= disasterLineData.flood[0] %>',
+          '<%= disasterLineData.flood[1] %>',
+          '<%= disasterLineData.flood[2] %>',
+          '<%= disasterLineData.flood[3] %>',
+          '<%= disasterLineData.flood[4] %>',
+          '<%= disasterLineData.flood[5] %>',
+          '<%= disasterLineData.flood[6] %>',
+          '<%= disasterLineData.flood[7] %>',
+          '<%= disasterLineData.flood[8] %>',
+          '<%= disasterLineData.flood[9] %>',
+          '<%= disasterLineData.flood[10] %>',
+          '<%= disasterLineData.flood[11] %>',
+          '<%= disasterLineData.flood[12] %>',
+          '<%= disasterLineData.flood[13] %>'
+        ],
+        borderColor: 'rgb(120, 133, 248)',
+        fill: false,
+        tension: 0.1
+      },
+      {
+        label: 'Wildfires',
+        data: [
+          '<%= disasterLineData.wildfire[0] %>',
+          '<%= disasterLineData.wildfire[1] %>',
+          '<%= disasterLineData.wildfire[2] %>',
+          '<%= disasterLineData.wildfire[3] %>',
+          '<%= disasterLineData.wildfire[4] %>',
+          '<%= disasterLineData.wildfire[5] %>',
+          '<%= disasterLineData.wildfire[6] %>',
+          '<%= disasterLineData.wildfire[7] %>',
+          '<%= disasterLineData.wildfire[8] %>',
+          '<%= disasterLineData.wildfire[9] %>',
+          '<%= disasterLineData.wildfire[10] %>',
+          '<%= disasterLineData.wildfire[11] %>',
+          '<%= disasterLineData.wildfire[12] %>',
+          '<%= disasterLineData.wildfire[13] %>'
+        ],
+        borderColor: 'rgb(226, 178, 87)',
+        fill: false,
+        tension: 0.1
+      },
+      {
+        label: 'Blizzards',
+        data: [
+          '<%= disasterLineData.blizzard[0] %>',
+          '<%= disasterLineData.blizzard[1] %>',
+          '<%= disasterLineData.blizzard[2] %>',
+          '<%= disasterLineData.blizzard[3] %>',
+          '<%= disasterLineData.blizzard[4] %>',
+          '<%= disasterLineData.blizzard[5] %>',
+          '<%= disasterLineData.blizzard[6] %>',
+          '<%= disasterLineData.blizzard[7] %>',
+          '<%= disasterLineData.blizzard[8] %>',
+          '<%= disasterLineData.blizzard[9] %>',
+          '<%= disasterLineData.blizzard[10] %>',
+          '<%= disasterLineData.blizzard[11] %>',
+          '<%= disasterLineData.blizzard[12] %>',
+          '<%= disasterLineData.blizzard[13] %>'
+        ],
+        borderColor: 'rgb(156, 205, 228)',
+        fill: false,
+        tension: 0.1
+      },
+      {
+        label: 'Haze',
+        data: [
+          '<%= disasterLineData.haze[0] %>',
+          '<%= disasterLineData.haze[1] %>',
+          '<%= disasterLineData.haze[2] %>',
+          '<%= disasterLineData.haze[3] %>',
+          '<%= disasterLineData.haze[4] %>',
+          '<%= disasterLineData.haze[5] %>',
+          '<%= disasterLineData.haze[6] %>',
+          '<%= disasterLineData.haze[7] %>',
+          '<%= disasterLineData.haze[8] %>',
+          '<%= disasterLineData.haze[9] %>',
+          '<%= disasterLineData.haze[10] %>',
+          '<%= disasterLineData.haze[11] %>',
+          '<%= disasterLineData.haze[12] %>',
+          '<%= disasterLineData.haze[13] %>'
+        ],
+        borderColor: 'rgb(229, 230, 183)',
+        fill: false,
+        tension: 0.1
+      },
+      {
+        label: 'Meteors',
+        data: [
+          '<%= disasterLineData.meteor[0] %>',
+          '<%= disasterLineData.meteor[1] %>',
+          '<%= disasterLineData.meteor[2] %>',
+          '<%= disasterLineData.meteor[3] %>',
+          '<%= disasterLineData.meteor[4] %>',
+          '<%= disasterLineData.meteor[5] %>',
+          '<%= disasterLineData.meteor[6] %>',
+          '<%= disasterLineData.meteor[7] %>',
+          '<%= disasterLineData.meteor[8] %>',
+          '<%= disasterLineData.meteor[9] %>',
+          '<%= disasterLineData.meteor[10] %>',
+          '<%= disasterLineData.meteor[11] %>',
+          '<%= disasterLineData.meteor[12] %>',
+          '<%= disasterLineData.meteor[13] %>'
+        ],
+        borderColor: 'rgb(162, 104, 201)',
+        fill: false,
+        tension: 0.1
+      }
+    ]
+  };
+
+  const config2 = {
+    type: 'line',
+    data: data2,  // use 'data' property here
+    options: {
+      scales: {
+        x: {
+          title: { display: true, text: 'Date' }
+        },
+        y: {
+          beginAtZero: true,
+          title: { display: true, text: 'Frequency' },
+          ticks: { precision: 0 }
+        }
+      },
+      plugins: {
+        title: { display: true, text: 'Disaster Tweet Frequency (Past 14 Days)' }
+      }
+    }
+  };
+
+  ctx2 = new Chart(ctx2, config2);
+
+
+
+
+//adds all the markers for the text given (the most recent 500)
+  function addMarkers(dtype) {
+    '<% if (tweets.length > 0) { %>'
+    '<% tweets.forEach(tweet => { %>'
+    if ('<%=tweet.disaster_type%>' == dtype) {
+      '<% if (tweet.latitude != null){ %>'
+      addToMap('<%= tweet.latitude %>', '<%= tweet.longitude  %>', '<%=tweet.disaster_type%>', '<%=tweet.timestamp%>');
+      '<% } %>'
+    }
+    '<% }); %>'
+    '<% } %>'
+  }
+//add by type
+  addMarkers("tornado");
+  addMarkers("hurricane");
+  addMarkers("blizzard");
+  addMarkers("wildfire");
+  addMarkers("flood");
+  addMarkers("earthquake");
+  addMarkers("haze");
+  addMarkers("meteor");
+
+
+
+
+</script>
+
+</html>

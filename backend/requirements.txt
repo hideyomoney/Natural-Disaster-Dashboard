@@ -1,0 +1,15 @@
+Flask==3.1.0
+pymongo
+atproto
+emoji
+spacy
+geopy
+pydantic
+joblib
+python-dotenv
+scikit-learn
+lightgbm
+numpy
+pandas
+scipy
+gunicorn

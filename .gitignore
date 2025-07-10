@@ -1,0 +1,16 @@
+# === Node.js frontend ===
+node_modules/
+.env
+npm-debug.log
+
+# === Python backend ===
+__pycache__/
+*.pyc
+*.pkl
+.env
+venv/
+
+# === General ===
+*.log
+temp.txt
+.DS_Store
